@@ -64,11 +64,11 @@ for ARCH in $ARCHS; do
     fi
 
     if [[ "$ENVIRONMENT" = "development" ]]; then
-        CFLAGS="$ACFLAGS"
-        LDFLAGS="$ALDFLAGS"
+        CFLAGS="$ACFLAGS -Wno-error=unused-but-set-variable"
+        LDFLAGS="$ALDFLAGS -Wno-error=unused-but-set-variable"
     else
-        CFLAGS="$ACFLAGS -fembed-bitcode -Os"
-        LDFLAGS="$ALDFLAGS -fembed-bitcode -Os"
+        CFLAGS="$ACFLAGS -fembed-bitcode -Os -Wno-error=unused-but-set-variable"
+        LDFLAGS="$ALDFLAGS -fembed-bitcode -Os -Wno-error=unused-but-set-variable"
     fi
     CXXFLAGS="$CFLAGS"
 
@@ -93,6 +93,9 @@ for ARCH in $ARCHS; do
 				mkdir -p $SCRATCH/$ARCH/libass && cd $_ && $SCRIPTS/libass-build
 				;;
             "libuchardet" )
+                if [ -f "$SCRATCH/$ARCH/uchardet/CMakeCache.txt" ]; then
+                    sed -i ''  's/CMAKE_OSX_DEPLOYMENT_TARGET:STRING=14.3/CMAKE_OSX_DEPLOYMENT_TARGET:STRING=/' $SCRATCH/$ARCH/uchardet/CMakeCache.txt
+                fi
 				mkdir -p $SCRATCH/$ARCH/uchardet && cd $_ && $SCRIPTS/uchardet-build
 				;;
             "ffmpeg" )

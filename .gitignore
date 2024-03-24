@@ -2,3 +2,5 @@ lib/
 downloads/
 src/
 scratch/
+.DS_Store
+MPVKit/Frameworks
